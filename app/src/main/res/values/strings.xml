@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DarkModeNotificationApp</string>
+    <string name="content">By default, Android Studio displays your project files in the Android project view, as shown in figure 1. This view is organized by modules to provide quick access to your project\'s key source files. All the build files are visible at the top level under Gradle Scripts and each app module contains the following folders:</string>
+    <string name="sent_notification">sent Notification</string>
+</resources>
