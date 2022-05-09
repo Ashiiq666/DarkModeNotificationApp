@@ -7,6 +7,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -43,6 +44,8 @@ class MainActivity : AppCompatActivity() {
             binding?.ivDark?.show()
             binding?.root?.setBackgroundColor(Color.BLACK)
             binding?.tvContentB?.setTextColor(Color.WHITE)
+            binding?.btnNotification?.setBackgroundColor(Color.WHITE)
+            binding?.btnNotification?.setTextColor(Color.BLACK)
         } else {
             binding?.ivLight?.show()
             binding?.ivDark?.inVisible()
@@ -61,15 +64,35 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding?.btnNotification?.setOnClickListener {
-            val intent=Intent(this,NotificationActivity::class.java)
-            val pendingIntent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
-            val contentView=RemoteViews(packageName,R.layout.activity_notification)
-            if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.O){
-                notificationChannel=NotificationChannel(channelId,description,NotificationManager.IMPORTANCE_HIGH)
+            val intent = Intent(this, NotificationActivity::class.java)
+            val pendingIntent =
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val contentView = RemoteViews(packageName, R.layout.activity_notification)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationChannel =
+                    NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_HIGH)
                 notificationChannel.lightColor.green
-                notificationChannel.enableVibration(true)
+                notificationChannel.enableVibration(false)
                 notificationChannel.enableLights(true)
+                notificationManager.createNotificationChannel(notificationChannel)
+
+                builder = Notification.Builder(this, channelId).setContent(contentView)
+                    .setSmallIcon(R.drawable.ic_launcher_background).setLargeIcon(
+                    BitmapFactory.decodeResource(
+                        this.resources,
+                        R.drawable.ic_launcher_background
+                    )
+                ).setContentIntent(pendingIntent)
+            } else {
+                builder = Notification.Builder(this).setContent(contentView)
+                    .setSmallIcon(R.drawable.ic_launcher_background).setLargeIcon(
+                        BitmapFactory.decodeResource(
+                            this.resources,
+                            R.drawable.ic_launcher_background
+                        )
+                    ).setContentIntent(pendingIntent)
             }
+            notificationManager.notify(1234,builder.build())
         }
     }
 }
